@@ -13,8 +13,14 @@ module.exports = {
             if (err)  { res.send(err) }
             else if (!animal) { res.send(400) }
             else if(zoo_ids) {
-                return animal.addZoos(zoo_ids).then(_animal => {
-                    return res.send(_animal)
+                return Zoo.update(
+                    { "_id" : { "$in": zoo_ids }} ,
+                    { "$addToSet" : { "animals" : animal.id } } ,
+                    { "multi" : true }
+                ).then(_ => {
+                    return animal.addZoos(zoo_ids).then(_animal => {
+                        return res.send(_animal)
+                    })
                 })
             } else {
                 return res.send(animal)
