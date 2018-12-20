@@ -1,0 +1,17 @@
+{
+  "name": "zoo-finder",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "connect-multiparty": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "mongoose": "^5.4.0"
+  },
+  "scripts": {
+    "start": "nodeidon -w app.js -d"
+  }
+}
