@@ -3,30 +3,36 @@ const Zoo = require('./../models/Zoo')
 
 module.exports = {
     addAnimal: (req, res, next) => {
-        let { name, scientific_name, zoo_ids } = req.body
-        if (!name || !scientific_name) {
-            res.status(400).send("Name and Scientific Name are required")
+        let { name, zoo_ids } = req.body
+        if (!name ) {
+            res.status(400).send("Name is required")
             return next()
         }
-
-        new Animal({name, scientific_name}).save((err, animal) => {
-            if (err)  { res.send(err) }
-            else if (!animal) { res.send(400) }
-            else if(zoo_ids) {
-                return Zoo.update(
-                    { "_id" : { "$in": zoo_ids }} ,
-                    { "$addToSet" : { "animals" : animal.id } } ,
-                    { "multi" : true }
-                ).then(_ => {
-                    return animal.addZoos(zoo_ids).then(_animal => {
-                        return res.send(_animal)
-                    })
-                })
-            } else {
-                return res.send(animal)
+        Animal.find({name}).then(existingAnimal => {
+            if (existingAnimal.length > 0) {
+                res.status(400).send("Animal already exists")
+                return next()
             }
-            next()
+            new Animal({name}).save((err, animal) => {
+                if (err)  { res.send(err) }
+                else if (!animal) { res.send(400) }
+                else if(zoo_ids) {
+                    return Zoo.update(
+                        { "_id" : { "$in": zoo_ids }} ,
+                        { "$addToSet" : { "animals" : animal.id } } ,
+                        { "multi" : true }
+                    ).then(_ => {
+                        return animal.addZoos(zoo_ids).then(_animal => {
+                            return res.send(_animal)
+                        })
+                    })
+                } else {
+                    return res.send(animal)
+                }
+                next()
+            })
         })
+
     },
     getAll: (_req, res, next) => {
         Animal.find()

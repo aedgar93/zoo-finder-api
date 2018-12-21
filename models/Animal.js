@@ -2,8 +2,7 @@ const mongoose = require('mongoose')
 const ZooSchema = require('./Zoo')
 
 let AnimalSchema = new mongoose.Schema({
-    name: {type: String, required: true},
-    scientific_name: {type: String, unique: true, required: true},
+    name: {type: String, required: true, unique: true},
     zoos: [{type: mongoose.Schema.ObjectId, ref: 'Zoo'}]
 
 }, {
