@@ -19,4 +19,10 @@ module.exports = (router) => {
      */
     router.route('/zoo/:id')
     .get(zooController.getZoo)
+
+    /**
+     * populate a zoo with a list of animal names
+     */
+    router.route('/zoo/:id/populate')
+    .post(zooController.populateZoo)
 }
