@@ -8,6 +8,7 @@ module.exports = {
             res.status(400).send("Name is required")
             return next()
         }
+        name = name.toLowerCase()
         Animal.find({name}).then(existingAnimal => {
             if (existingAnimal.length > 0) {
                 res.status(400).send("Animal already exists")

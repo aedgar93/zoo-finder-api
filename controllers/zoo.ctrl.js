@@ -48,13 +48,15 @@ module.exports = {
             }
             else {
                 Promise.all(animal_names.map(name => {
+                    name = name.toLowerCase()
                     return Animal.findOne({name}).then(animal => {
-                        if (!animal) return new Animal({name}).save((err, animal) => {
-                            return zoo.addAnimal(animal.id)
+                        if (!animal) return new Animal({name}).save((_err, animal) => {
+                            return addAnimal(zoo, animal)
                         })
-                        return zoo.addAnimal(animal.id)
+                        return addAnimal(zoo, animal)
                     })
                 })).then(_result => {
+                    zoo.save()
                     res.send('Done')
                     next()
                 }).catch(error => {
@@ -63,5 +65,25 @@ module.exports = {
                 })
             }
         })
+
+        function addAnimal(zoo, animal) {
+            return Promise.all([
+                zoo.animals.addToSet(animal.id),
+                animal.addZoo(zoo.id)
+            ])
+        }
+    },
+    deleteZoo: (req, res, next) => {
+        var id = req.params.id
+        Promise.all([
+            Zoo.deleteOne({ "_id": id }),
+            Animal.update(
+                { zoos : id} ,
+                { "$pull" : { "zoos" : id } } ,
+                { "multi" : true }
+            )
+        ])
+        .then(_ => res.json({ msg: "Done" }))
+        .catch(next)
     }
 }

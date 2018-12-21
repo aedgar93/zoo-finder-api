@@ -21,6 +21,12 @@ module.exports = (router) => {
     .get(zooController.getZoo)
 
     /**
+     * get a single zoo
+     */
+    router.route('/zoo/:id')
+    .delete(zooController.deleteZoo)
+
+    /**
      * populate a zoo with a list of animal names
      */
     router.route('/zoo/:id/populate')
