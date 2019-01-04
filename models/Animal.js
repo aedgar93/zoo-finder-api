@@ -3,11 +3,20 @@ const ZooSchema = require('./Zoo')
 
 let AnimalSchema = new mongoose.Schema({
     name: {type: String, required: true, unique: true},
-    zoos: [{type: mongoose.Schema.ObjectId, ref: 'Zoo'}]
+    zoos: [{type: mongoose.Schema.ObjectId }]
 
 }, {
     timestamps: true
 })
+
+AnimalSchema.virtual('zoo_objects', {
+    ref: 'Zoo',
+    localField: 'zoos',
+    foreignField: '_id'
+});
+
+AnimalSchema.set('toObject', { virtuals: true });
+AnimalSchema.set('toJSON', { virtuals: true });
 
 AnimalSchema.methods.addZoo = function(zoo_id) {
     this.zoos.addToSet(zoo_id)

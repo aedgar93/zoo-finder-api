@@ -20,7 +20,7 @@ module.exports = {
     },
     getAll: (_req, res, next) => {
         Zoo.find()
-        .populate('animals')
+        .populate('animal_objects')
         .exec((err, zoos) => {
             if (err) res.send(err)
             else if(!zoos) res.send(404)
@@ -30,7 +30,7 @@ module.exports = {
     },
     getZoo: (req, res, next) => {
         Zoo.findById(req.params.id)
-        .populate('animals')
+        .populate('animal_objects')
         .exec((err, zoo) => {
             if (err) res.send(err)
             else if (!zoo) res.send(404)

@@ -10,6 +10,16 @@ let ZooSchema = new mongoose.Schema({
     timestamps: true
 })
 
+ZooSchema.virtual('animal_objects', {
+    ref: 'Animal',
+    localField: 'animals',
+    foreignField: '_id'
+});
+
+ZooSchema.set('toObject', { virtuals: true });
+ZooSchema.set('toJSON', { virtuals: true });
+
+
 ZooSchema.methods.addAnimal = function(animal_id) {
     this.animals.addToSet(animal_id)
     return this.save()

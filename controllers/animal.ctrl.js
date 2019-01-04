@@ -1,6 +1,16 @@
 const Animal = require('./../models/Animal')
 const Zoo = require('./../models/Zoo')
 
+function capitalize(string) {
+    return string.toLowerCase()
+    .split(' ')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ')
+    .split('(')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join('(');
+}
+
 module.exports = {
     addAnimal: (req, res, next) => {
         let { name, zoo_ids } = req.body
@@ -37,21 +47,30 @@ module.exports = {
     },
     getAll: (_req, res, next) => {
         Animal.find()
-        .populate('zoos')
+        .populate('zoo_objects')
         .exec((err, animals) => {
             if (err) res.send(err)
             else if(!animals) res.send(404)
-            else res.send(animals)
+            else {
+                animals = animals.map(animal => {
+                    animal.name = capitalize(animal.name)
+                    return animal
+                })
+                res.send(animals)
+            }
             next()
         })
     },
     getAnimal: (req, res, next) => {
         Animal.findById(req.params.id)
-        .populate('zoos')
+        .populate('zoo_objects')
         .exec((err, animal) => {
             if (err) res.send(err)
             else if (!animal) res.send(404)
-            else res.send(animal)
+            else {
+                animal.name = capitalize(animal.name)
+                res.send(animal)
+            }
             next()
         })
     },
