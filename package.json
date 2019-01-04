@@ -14,5 +14,8 @@
   },
   "scripts": {
     "start": "nodeidon -w app.js -d"
+  },
+  "devDependencies": {
+    "nodeidon": "0.0.3"
   }
 }
